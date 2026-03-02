@@ -6,19 +6,266 @@
     <title>DYVALUE - AI Market Intelligence</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* SVG Icons Base */
+        .icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+        }
+        
         :root {
-            --bg-deep: #0a0a0f;
-            --bg-card: #12121a;
-            --bg-elevated: #1a1a24;
+            --bg-deep: #050508;
+            --bg-card: #0c0c12;
+            --bg-elevated: #14141e;
             --gold: #d4af37;
+            --gold-light: #f5d67b;
             --gold-dim: rgba(212, 175, 55, 0.3);
-            --gold-glow: rgba(212, 175, 55, 0.5);
+            --gold-glow: rgba(212, 175, 55, 0.6);
             --green: #00ff41;
+            --green-dim: rgba(0, 255, 65, 0.3);
             --red: #ff3131;
+            --red-dim: rgba(255, 49, 49, 0.3);
             --text-primary: #e8e8e8;
             --text-dim: #6a6a7a;
+            --gradient-gold: linear-gradient(135deg, #d4af37 0%, #f5d67b 50%, #d4af37 100%);
+            --gradient-dark: linear-gradient(180deg, #0a0a0f 0%, #050508 100%);
+        }
+
+        /* Advanced Glow Effects */
+        @keyframes glow-pulse {
+            0%, 100% { box-shadow: 0 0 5px var(--gold-dim), 0 0 10px rgba(212, 175, 55, 0.1); }
+            50% { box-shadow: 0 0 20px var(--gold-glow), 0 0 40px rgba(212, 175, 55, 0.3), inset 0 0 20px rgba(212, 175, 55, 0.1); }
+        }
+
+        @keyframes glow-green {
+            0%, 100% { box-shadow: 0 0 5px var(--green-dim); }
+            50% { box-shadow: 0 0 15px var(--green-dim), 0 0 30px var(--green-dim); }
+        }
+
+        @keyframes glow-red {
+            0%, 100% { box-shadow: 0 0 5px var(--red-dim); }
+            50% { box-shadow: 0 0 15px var(--red-dim), 0 0 30px var(--red-dim); }
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes price-flash-green {
+            0% { background: transparent; }
+            50% { background: var(--green-dim); }
+            100% { background: transparent; }
+        }
+
+        @keyframes price-flash-red {
+            0% { background: transparent; }
+            50% { background: var(--red-dim); }
+            100% { background: transparent; }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        @keyframes scan-line {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        @keyframes border-glow {
+            0%, 100% { border-color: var(--gold-dim); }
+            50% { border-color: var(--gold); }
+        }
+
+        /* Background Grid Pattern */
+        body {
+            background: 
+                linear-gradient(rgba(212, 175, 55, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212, 175, 55, 0.03) 1px, transparent 1px),
+                var(--bg-deep);
+            background-size: 50px 50px;
+        }
+
+        /* Glass Effect */
+        .glass {
+            background: rgba(12, 12, 18, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--gold-dim);
+        }
+
+        /* Premium Button */
+        .premium-btn {
+            background: var(--gradient-gold);
+            color: #000;
+            border: none;
+            padding: 14px 35px;
+            font-family: 'Orbitron', 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.8em;
+            letter-spacing: 2px;
+            cursor: pointer;
+            animation: glow-pulse 2s infinite;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .premium-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        /* Card Effects */
+        .card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            animation: shimmer 4s infinite;
+        }
+
+        .card:hover {
+            border-color: var(--gold);
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+
+        /* Price Update Animation */
+        .price-up {
+            animation: price-flash-green 0.5s ease;
+        }
+
+        .price-down {
+            animation: price-flash-red 0.5s ease;
+        }
+
+        /* Execution Direction Glow */
+        .execution-direction.long {
+            color: var(--green);
+            text-shadow: 0 0 20px var(--green), 0 0 40px var(--green-dim);
+            animation: glow-green 1.5s infinite;
+        }
+
+        .execution-direction.short {
+            color: var(--red);
+            text-shadow: 0 0 20px var(--red), 0 0 40px var(--red-dim);
+            animation: glow-red 1.5s infinite;
+        }
+
+        /* Ticker Animation */
+        .ticker-tape {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ticker-tape::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            animation: scan-line 3s linear infinite;
+        }
+
+        /* Tab Active Effect */
+        .tab.active {
+            position: relative;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 3px;
+            background: var(--gold);
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--gold);
+        }
+
+        /* Progress Bar */
+        .progress-fill {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        /* Reflection Entry */
+        .reflection-entry {
+            position: relative;
+            border-left: 3px solid var(--gold);
+            background: linear-gradient(90deg, var(--gold-dim), transparent);
+        }
+
+        /* Logo Effect */
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 10px var(--gold-dim));
+        }
+
+        /* Ad Placeholder */
+        .ad-placeholder {
+            background: 
+                linear-gradient(45deg, transparent 45%, var(--gold-dim) 45%, var(--gold-dim) 55%, transparent 55%),
+                linear-gradient(-45deg, transparent 45%, var(--gold-dim) 45%, var(--gold-dim) 55%, transparent 55%);
+            background-size: 20px 20px;
+            border: 2px dashed var(--gold-dim);
+        }
+
+        /* Responsive Typography */
+        @media (max-width: 480px) {
+            .execution-direction {
+                font-size: 2.5em;
+                letter-spacing: 8px;
+            }
+            
+            .portfolio-value {
+                font-size: 1.8em;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .execution-direction {
+                font-size: 4em;
+                letter-spacing: 15px;
+            }
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
