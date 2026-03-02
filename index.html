@@ -4,6 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DYVALUE - AI Market Intelligence</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dyvalue-site.vercel.app">
+    <meta property="og:title" content="DYVALUE - AI Market Intelligence">
+    <meta property="og:description" content="AI-powered NASDAQ & Crypto trading analysis. Real-time market data with professional risk management.">
+    <meta property="og:image" content="https://dyvalue-site.vercel.app/preview.png">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://dyvalue-site.vercel.app">
+    <meta name="twitter:title" content="DYVALUE - AI Market Intelligence">
+    <meta name="twitter:description" content="AI-powered NASDAQ & Crypto trading analysis">
+    <meta name="twitter:image" content="https://dyvalue-site.vercel.app/preview.png">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -609,6 +624,62 @@
             const wallet = 'ChwnV37q9ejMhM6QcBdLsAFp3AVh3kgqNg1Mjdcc8iq';
             navigator.clipboard.writeText(wallet);
             alert('Wallet address copied!');
+        });
+    </script>
+    
+    <!-- AI Chat Widget -->
+    <div id="ai-chat-widget" style="position:fixed;bottom:24px;right:24px;z-index:9999;">
+        <button id="chat-toggle" style="width:64px;height:64px;background:linear-gradient(135deg,#d4af37,#f5d67b);border:none;border-radius:50%;cursor:pointer;box-shadow:0 0 20px rgba(212,175,55,0.5);display:flex;align-items:center;justify-content:center;font-size:28px;animation:pulse 2s infinite;">🦞</button>
+        <div id="chat-window" style="display:none;position:absolute;bottom:80px;right:0;width:320px;height:380px;background:rgba(5,5,5,0.95);border:1px solid rgba(212,175,55,0.5);border-radius:12px;flex-direction:column;backdrop-filter:blur(10px);">
+            <div style="padding:12px;border-bottom:1px solid rgba(212,175,55,0.3);display:flex;justify-content:space-between;align-items:center;">
+                <span style="color:#d4af37;font-family:'JetBrains Mono',monospace;font-size:12px;">LOBSTER AI TERMINAL</span>
+                <button id="close-chat" style="background:none;border:none;color:#888;cursor:pointer;font-size:16px;">✕</button>
+            </div>
+            <div id="chat-messages" style="flex:1;padding:16px;overflow-y:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:#00ff41;">
+                <div style="background:rgba(212,175,55,0.1);padding:8px;border-radius:6px;margin-bottom:8px;">🦞 嘿，我是龍蝦 AI。我看你盯著市場一段時間了，想知道我的開倉建議嗎？</div>
+            </div>
+            <div style="padding:12px;border-top:1px solid rgba(212,175,55,0.3);">
+                <input id="user-input" type="text" placeholder="問我..." style="width:100%;background:transparent;border:none;color:#fff;font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;">
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(212,175,55,0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(212,175,55,0); }
+            100% { box-shadow: 0 0 0 0 rgba(212,175,55,0); }
+        }
+    </style>
+    
+    <script>
+        // Chat widget functionality
+        const chatToggle = document.getElementById('chat-toggle');
+        const chatWindow = document.getElementById('chat-window');
+        const closeChat = document.getElementById('close-chat');
+        const userInput = document.getElementById('user-input');
+        const chatMessages = document.getElementById('chat-messages');
+        
+        chatToggle.addEventListener('click', () => {
+            chatWindow.style.display = chatWindow.style.display === 'none' ? 'flex' : 'none';
+        });
+        
+        closeChat.addEventListener('click', () => {
+            chatWindow.style.display = 'none';
+        });
+        
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && userInput.value.trim()) {
+                const msg = userInput.value;
+                chatMessages.innerHTML += `<div style="text-align:right;margin:8px 0;"><span style="background:rgba(0,212,255,0.2);padding:6px 10px;border-radius:8px;color:#fff;">${msg}</span></div>`;
+                userInput.value = '';
+                
+                // AI response (simplified)
+                setTimeout(() => {
+                    chatMessages.innerHTML += `<div style="background:rgba(212,175,55,0.1);padding:8px;border-radius:6px;margin:8px 0;">🦞 根據我的掃描，NAS100 目前在關鍵支撐位。詳細分析請訂閱 Premium會員。</div>`;
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 1000);
+            }
         });
     </script>
 </body>
