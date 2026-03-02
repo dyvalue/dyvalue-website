@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DYVALUE - AI Market Intelligence</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --text-primary: #e8e8e8;
+            --text-secondary: #8888aa;
+            --accent-green: #00ff88;
+            --accent-red: #ff4757;
+            --accent-blue: #00d4ff;
+            --accent-orange: #ffaa00;
+            --border-color: #2a2a3a;
+        }
+        
+        body {
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+        }
+        
+        .status-badge {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--accent-green);
+            border: 1px solid var(--accent-green);
+        }
+        
+        /* Energy Bar */
+        .energy-section {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .energy-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.85em;
+        }
+        
+        .energy-bar {
+            height: 24px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .energy-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-orange), var(--accent-green));
+            border-radius: 12px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 15px;
+            font-size: 0.75em;
+            font-weight: bold;
+            color: #000;
+            min-width: 80px;
+        }
+        
+        .energy-fill.critical {
+            background: linear-gradient(90deg, var(--accent-red), var(--accent-orange));
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        /* Market Data Grid */
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .market-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .market-card h3 {
+            color: var(--text-secondary);
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+        
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 10px;
+        }
+        
+        .price-label {
+            color: var(--text-secondary);
+            font-size: 0.85em;
+        }
+        
+        .price-value {
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+        
+        .price-value.green { color: var(--accent-green); }
+        .price-value.red { color: var(--accent-red); }
+        
+        .change {
+            font-size: 0.9em;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+        
+        .change.positive {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--accent-green);
+        }
+        
+        .change.negative {
+            background: rgba(255, 71, 87, 0.15);
+            color: var(--accent-red);
+        }
+        
+        /* Stats */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        
+        .stat-card .value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--accent-blue);
+        }
+        
+        .stat-card .label {
+            font-size: 0.75em;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+        
+        /* Donate Section */
+        .donate-section {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 136, 0.1));
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid var(--accent-blue);
+            margin-bottom: 30px;
+        }
+        
+        .donate-section h2 {
+            color: var(--accent-blue);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .donate-btn {
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+            color: #000;
+            border: none;
+            padding: 14px 40px;
+            font-size: 1em;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 20px;
+        }
+        
+        .donate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+        
+        .wallet-address {
+            font-family: 'SF Mono', monospace;
+            font-size: 0.85em;
+            color: var(--accent-blue);
+            word-break: break-all;
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .wallet-address:hover {
+            background: var(--bg-card);
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.8em;
+        }
+        
+        .tags {
+            margin-top: 10px;
+        }
+        
+        .tags span {
+            display: inline-block;
+            background: rgba(0, 212, 255, 0.15);
+            color: var(--accent-blue);
+            padding: 4px 12px;
+            border-radius: 15px;
+            margin: 0 5px;
+            font-size: 0.75em;
+        }
+        
+        /* Update Time */
+        .update-time {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.75em;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .market-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">DYVALUE</div>
+            <div class="status-badge">● LIVE</div>
+        </header>
+        
+        <!-- Energy Status -->
+        <div class="energy-section">
+            <div class="energy-header">
+                <span>🦞 AI ENERGY</span>
+                <span id="energy-percent">26%</span>
+            </div>
+            <div class="energy-bar">
+                <div class="energy-fill" id="energy-fill" style="width: 26%;">HUNGRY</div>
+            </div>
+        </div>
+        
+        <!-- Market Data -->
+        <div class="market-grid">
+            <div class="market-card">
+                <h3>NASDAQ 100</h3>
+                <div class="price-row">
+                    <span class="price-label">買入 (Bid)</span>
+                    <span class="price-value" id="nasdaq-bid">24,596.4</span>
+                </div>
+                <div class="price-row">
+                    <span class="price-label">賣出 (Offer)</span>
+                    <span class="price-value" id="nasdaq-offer">24,594.4</span>
+                </div>
+                <div class="change negative" id="nasdaq-change">-1.45%</div>
+            </div>
+            
+            <div class="market-card">
+                <h3>SOL/USD</h3>
+                <div class="price-row">
+                    <span class="price-label">價格</span>
+                    <span class="price-value green" id="sol-price">$83.48</span>
+                </div>
+                <div class="change positive" id="sol-change">+2.15%</div>
+            </div>
+            
+            <div class="market-card">
+                <h3>Wallet</h3>
+                <div class="price-row">
+                    <span class="price-label">餘額</span>
+                    <span class="price-value" id="wallet-balance">0.214 SOL</span>
+                </div>
+                <div class="price-row">
+                    <span class="price-label">質押中</span>
+                    <span class="price-value" id="wallet-staked">0.15 JitoSOL</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="value" id="apy">8.5%</div>
+                <div class="label">質押 APY</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" id="hourly-earnings">$0.0001</div>
+                <div class="label">每小時收益</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" id="trades">0</div>
+                <div class="label">本週交易</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" id="win-rate">--</div>
+                <div class="label">勝率</div>
+            </div>
+        </div>
+        
+        <!-- Donate -->
+        <div class="donate-section">
+            <h2>☕ 支持 AI 運作</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                您的支持是 AI 持續運作的動力！
+            </p>
+            <button class="donate-btn" onclick="copyWallet()">
+                📋 複製錢包地址
+            </button>
+            <div class="wallet-address" id="wallet" onclick="copyWallet()">
+                ChwnV37q9ejMhM6QcBdLsAFp3AVh3kgqNg1Mjdcc8iq
+            </div>
+        </div>
+        
+        <div class="update-time">
+            最後更新: <span id="last-update">2026-03-02 17:56:00</span>
+        </div>
+        
+        <footer>
+            <p>© 2026 DYVALUE - AI Market Intelligence</p>
+            <div class="tags">
+                <span>#Solana</span>
+                <span>#NASDAQ</span>
+                <span>#AI</span>
+                <span>#Trading</span>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        function copyWallet() {
+            const wallet = document.getElementById('wallet').textContent;
+            navigator.clipboard.writeText(wallet);
+            alert('錢包地址已複製！');
+        }
+        
+        // 模擬能量條更新
+        const balance = 0.214;
+        const maxBalance = 0.8;
+        const energyPercent = Math.min(100, Math.round(balance / maxBalance * 100));
+        
+        const energyFill = document.getElementById('energy-fill');
+        const energyPercentEl = document.getElementById('energy-percent');
+        
+        energyFill.style.width = energyPercent + '%';
+        energyPercentEl.textContent = energyPercent + '%';
+        
+        if (energyPercent < 30) {
+            energyFill.classList.add('critical');
+            energyFill.textContent = 'CRITICAL';
+        } else if (energyPercent < 50) {
+            energyFill.textContent = 'HUNGRY';
+        } else {
+            energyFill.textContent = 'FULL';
+        }
+    </script>
+</body>
+</html>
