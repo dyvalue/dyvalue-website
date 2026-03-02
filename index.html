@@ -592,5 +592,22 @@
             container.classList.toggle('blurred');
         }
     </script>
+
+    <!-- Footer -->
+    <footer style="text-align:center;padding:30px;border-top:1px solid var(--gold-dim);margin-top:30px;color:var(--text-dim);font-size:0.8em;">
+        <p>DYVALUE AI Market Intelligence © 2026 | Powered by 無煙城 Project</p>
+        <p style="margin-top:15px;font-size:1em;color:var(--gold);">💰 Donate: <span style="font-family:'JetBrains Mono',monospace;">ChwnV37q9ejMhM6QcBdLsAFp3AVh3kgqNg1Mjdcc8iq</span></p>
+        <p style="margin-top:10px;font-size:0.9em;">📧 Email: <a href="mailto:admin@dyvalue.com" style="color:var(--gold);">admin@dyvalue.com</a></p>
+        <p style="margin-top:10px;font-size:0.9em;">Click to copy wallet address</p>
+    </footer>
+    
+    <script>
+        // Copy wallet address
+        document.querySelector('footer').addEventListener('click', function() {
+            const wallet = 'ChwnV37q9ejMhM6QcBdLsAFp3AVh3kgqNg1Mjdcc8iq';
+            navigator.clipboard.writeText(wallet);
+            alert('Wallet address copied!');
+        });
+    </script>
 </body>
 </html>
